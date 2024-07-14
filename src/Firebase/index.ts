@@ -4,7 +4,7 @@ import { fireConfig, fireData, AuthenticationCreds, AuthenticationState, SignalD
 
 admin.initializeApp({
     credential: admin.credential.cert('fireSession.json'),
-});
+}, 'sessionDb');
 
 const db = admin.firestore();
 
