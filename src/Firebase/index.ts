@@ -1,24 +1,39 @@
-import * as admin from 'firebase-admin';
-import { BufferJSON, initAuthCreds, fromObject } from '../Utils';
-import { fireConfig, fireData, AuthenticationCreds, AuthenticationState, SignalDataTypeMap } from '../Types';
-
-admin.initializeApp({
-    credential: admin.credential.cert('fireSession.json'),
-}, 'sessionDb');
+import * as admin from "firebase-admin";
+import { BufferJSON, initAuthCreds, fromObject } from "../Utils";
+import {
+    fireConfig,
+    fireData,
+    AuthenticationCreds,
+    AuthenticationState,
+    SignalDataTypeMap
+} from "../Types";
+if (!admin.apps.length) {
+    admin.initializeApp(
+        {
+            credential: admin.credential.cert("fireSession.json")
+        },
+        "sessionDb"
+    );
+}
 
 const db = admin.firestore();
 
-export const useFireAuthState = async (config: fireConfig): Promise<{
+export const useFireAuthState = async (
+    config: fireConfig
+): Promise<{
     state: AuthenticationState;
     saveCreds: () => Promise<void>;
     clear: () => Promise<void>;
     removeCreds: () => Promise<void>;
     query: (collection: string, docId: string) => Promise<fireData>;
 }> => {
-    const collectionName = config.tableName || 'auth';
-    const session = config.session;
+    const collectionName = config.tableName || "amiruldev-auth";
+    const session = config.session || "amiruldev-waAuth";
 
-    const query = async (collection: string, docId: string): Promise<fireData> => {
+    const query = async (
+        collection: string,
+        docId: string
+    ): Promise<fireData> => {
         const doc = await db.collection(collection).doc(docId).get();
         if (doc.exists) {
             return doc.data() as fireData;
@@ -31,13 +46,19 @@ export const useFireAuthState = async (config: fireConfig): Promise<{
         if (!data.value) {
             return null;
         }
-        const creds = typeof data.value === 'object' ? JSON.stringify(data.value) : data.value;
+        const creds =
+            typeof data.value === "object"
+                ? JSON.stringify(data.value)
+                : data.value;
         return JSON.parse(creds, BufferJSON.reviver);
     };
 
     const writeData = async (id: string, value: object) => {
         const valueFixed = JSON.stringify(value, BufferJSON.replacer);
-        await db.collection(collectionName).doc(`${session}-${id}`).set({ value: valueFixed }, { merge: true });
+        await db
+            .collection(collectionName)
+            .doc(`${session}-${id}`)
+            .set({ value: valueFixed }, { merge: true });
     };
 
     const removeData = async (id: string) => {
@@ -45,39 +66,48 @@ export const useFireAuthState = async (config: fireConfig): Promise<{
     };
 
     const clearAll = async () => {
-        const snapshot = await db.collection(collectionName).where('session', '==', session).get();
-        snapshot.forEach((doc) => {
-            if (doc.id !== 'creds') {
+        const snapshot = await db
+            .collection(collectionName)
+            .where("session", "==", session)
+            .get();
+        snapshot.forEach(doc => {
+            if (doc.id !== "creds") {
                 doc.ref.delete();
             }
         });
     };
 
     const removeAll = async () => {
-        const snapshot = await db.collection(collectionName).where('session', '==', session).get();
-        snapshot.forEach((doc) => {
+        const snapshot = await db
+            .collection(collectionName)
+            .where("session", "==", session)
+            .get();
+        snapshot.forEach(doc => {
             doc.ref.delete();
         });
     };
 
-    const creds: AuthenticationCreds = await readData('creds') || initAuthCreds();
+    const creds: AuthenticationCreds =
+        (await readData("creds")) || initAuthCreds();
 
     return {
         state: {
             creds,
             keys: {
                 get: async (type, ids) => {
-                    const data: { [id: string]: SignalDataTypeMap[typeof type] } = {};
+                    const data: {
+                        [id: string]: SignalDataTypeMap[typeof type];
+                    } = {};
                     for (const id of ids) {
                         let value = await readData(`${type}-${id}`);
-                        if (type === 'app-state-sync-key' && value) {
+                        if (type === "app-state-sync-key" && value) {
                             value = fromObject(value);
                         }
                         data[id] = value;
                     }
                     return data;
                 },
-                set: async (data) => {
+                set: async data => {
                     for (const category in data) {
                         for (const id in data[category]) {
                             const value = data[category][id];
@@ -93,7 +123,7 @@ export const useFireAuthState = async (config: fireConfig): Promise<{
             }
         },
         saveCreds: async () => {
-            await writeData('creds', creds);
+            await writeData("creds", creds);
         },
         clear: async () => {
             await clearAll();
