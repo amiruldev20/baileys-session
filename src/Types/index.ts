@@ -121,11 +121,11 @@ export type KeyPair = {
     private: Uint8Array
 }
 
-export type FirestoreData = {
+export type fireData = {
     value?: object[]
 }
 
-export type FirestoreConfig = {
+export type fireConfig = {
     /* Name of the Firestore collection. (Default: auth) */
     collectionName?: string
     /* Retry the query at each interval if it fails. (Default: 200ms) */
