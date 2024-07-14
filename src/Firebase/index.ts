@@ -1,6 +1,6 @@
 import * as admin from 'firebase-admin';
 import { BufferJSON, initAuthCreds, fromObject } from '../Utils';
-import { FireConfig, fireData, AuthenticationCreds, AuthenticationState, SignalDataTypeMap } from '../Types';
+import { fireConfig, fireData, AuthenticationCreds, AuthenticationState, SignalDataTypeMap } from '../Types';
 
 admin.initializeApp({
     credential: admin.credential.cert('fireSession.json'),
@@ -8,7 +8,7 @@ admin.initializeApp({
 
 const db = admin.firestore();
 
-export const useFireAuthState = async (config: FireConfig): Promise<{
+export const useFireAuthState = async (config: fireConfig): Promise<{
     state: AuthenticationState;
     saveCreds: () => Promise<void>;
     clear: () => Promise<void>;
