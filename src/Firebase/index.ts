@@ -7,16 +7,14 @@ import {
     AuthenticationState,
     SignalDataTypeMap
 } from "../Types";
-if (!admin.apps.length) {
     admin.initializeApp(
         {
             credential: admin.credential.cert("fireSession.json")
         },
         "sessionDb"
     );
-}
 
-const db = admin.firestore();
+const db = admin.firestore("sessionDb");
 
 export const useFireAuthState = async (
     config: fireConfig
