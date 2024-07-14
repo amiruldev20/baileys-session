@@ -127,7 +127,7 @@ export type fireData = {
 
 export type fireConfig = {
     /* Name of the Firestore collection. (Default: auth) */
-    collectionName?: string
+    tableName?: string
     /* Retry the query at each interval if it fails. (Default: 200ms) */
     retryRequestDelayMs?: number
     /* Maximum attempts if the query fails. (Default: 10) */
