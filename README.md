@@ -1,2 +1,8 @@
-# baileys-firebase
-Firebase multi session for baileys
+# baileys-session
+multi session baileys created on external databases
+
+# Database Provider
+- Firebase ✅
+- MongoDB ⏱️
+- MySQL ⏱️
+- Postgree ⏱️
