@@ -8,9 +8,12 @@ import {
     SignalDataTypeMap
 } from "../Types";
 
-admin.initializeApp({
-    credential: admin.credential.cert("fireSession.json")
-}, "sessionDb");
+admin.initializeApp(
+    {
+        credential: admin.credential.cert("fireSession.json")
+    },
+    "sessionDb"
+);
 
 const db = admin.firestore(admin.app("sessionDb"));
 
@@ -50,11 +53,12 @@ export const useFireAuthState = async (
     };
 
     const writeData = async (id: string, value: object) => {
+        const batch = db.batch();
         const valueFixed = JSON.stringify(value, BufferJSON.replacer);
-        await db
-            .collection(collectionName)
-            .doc(`${session}-${id}`)
-            .set({ value: valueFixed }, { merge: true });
+        const docRef = db.collection(collectionName).doc(`${session}-${id}`);
+        batch.set(docRef, { value: valueFixed }, { merge: true });
+
+        await batch.commit();
     };
 
     const removeData = async (id: string) => {
