@@ -58,7 +58,11 @@ export const useFireAuthState = async (
         const docRef = db.collection(collectionName).doc(`${session}-${id}`);
         batch.set(docRef, { value: valueFixed }, { merge: true });
 
-        await batch.commit();
+        try {
+            await batch.commit();
+        } catch (error) {
+            console.error("Error writing batch:", error);
+        }
     };
 
     const removeData = async (id: string) => {
