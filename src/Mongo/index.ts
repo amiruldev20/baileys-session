@@ -9,33 +9,33 @@ import {
 } from "../Types";
 
 const sessionSchema = new mongoose.Schema({
-    _id: String,
+    _id: { type: String, required: true },
     value: mongoose.Schema.Types.Mixed,
-    session: String
+    session: { type: String, required: true }
 });
 
-const Session = mongoose.model("Session", sessionSchema);
+const Session = mongoose.model<mongoData>("Session", sessionSchema);
 
 export const useMongoAuthState = async (mongoURI: string, config: mongoConfig): Promise<{
     state: AuthenticationState;
     saveCreds: () => Promise<void>;
     clear: () => Promise<void>;
     removeCreds: () => Promise<void>;
-    query: (collection: string, docId: string) => Promise<mongoData>;
+    query: (collection: string, docId: string) => Promise<mongoData | null>;
 }> => {
     await mongoose.connect(mongoURI);
 
     const collectionName = config.tableName || "amiruldev-auth";
     const session = config.session || "amiruldev-waAuth";
 
-    const query = async (collection: string, docId: string): Promise<mongoData> => {
+    const query = async (collection: string, docId: string): Promise<mongoData | null> => {
         const doc = await Session.findById(`${session}-${docId}`);
-        return doc ? (doc.toObject() as mongoData) : ({} as mongoData);
+        return doc ? (doc.toObject() as mongoData) : null;
     };
 
     const readData = async (id: string) => {
         const data = await query(collectionName, id);
-        if (!data.value) {
+        if (!data || !data.value) {
             return null;
         }
         const creds = typeof data.value === "object"
