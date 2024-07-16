@@ -14,7 +14,7 @@
 
 **version npm**
 ```json
-"session": "npm:amiruldev/mongodb-session"
+"session": "npm:baileys-mongodb"
 ```
 
 ```json
