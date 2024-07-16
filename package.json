@@ -1,10 +1,10 @@
 {
-    "name": "baileys-session",
+    "name": "baileys-mongodb",
     "version": "1.0.1",
     "author": "Amirul Dev",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
-    "description": "implementation of session firebase for baileys",
+    "description": "mongodb external session for baileys",
     "homepage": "https://github.com/amiruldev20/baileys-session",
     "license": "MIT",
     "files": [
