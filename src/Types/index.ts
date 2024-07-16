@@ -1,4 +1,4 @@
-import { Document, Model, Schema, Types } from 'mongoose';
+import mongoose, { Document, Model, Schema } from 'mongoose';
 
 type Awaitable<T> = T | Promise<T>;
 
@@ -178,59 +178,3 @@ export type AuthenticationCreds = SignalCreds & {
     lastPropHash?: string;
     routingInfo?: Buffer;
 };
-
-// Mongoose Schema Definitions
-
-const contactSchema = new Schema<Contact>({
-    id: { type: String, required: true },
-    lid: String,
-    name: String,
-    notify: String,
-    verifiedName: String,
-    imgUrl: { type: String, default: null },
-    status: String,
-});
-
-const accountSchema = new Schema<Account>({
-    details: { type: Buffer, default: null },
-    accountSignatureKey: { type: Buffer, default: null },
-    accountSignature: { type: Buffer, default: null },
-    deviceSignature: { type: Buffer, default: null },
-});
-
-const mongoDataSchema = new Schema<mongoData>({
-    value: { type: Array, default: [] },
-});
-
-const authenticationCredsSchema = new Schema<AuthenticationCreds>({
-    signedIdentityKey: { type: Object, required: true },
-    signedPreKey: { type: Object, required: true },
-    registrationId: { type: Number, required: true },
-    noiseKey: { type: Object, required: true },
-    pairingEphemeralKeyPair: { type: Object, required: true },
-    advSecretKey: { type: String, required: true },
-    me: contactSchema,
-    account: accountSchema,
-    signalIdentities: [Object],
-    myAppStateKeyId: String,
-    firstUnuploadedPreKeyId: { type: Number, required: true },
-    nextPreKeyId: { type: Number, required: true },
-    lastAccountSyncTimestamp: Number,
-    platform: String,
-    processedHistoryMessages: [{ key: String, messageTimestamp: Number }],
-    accountSyncCounter: { type: Number, required: true },
-    accountSettings: { type: Object, required: true },
-    deviceId: { type: String, required: true },
-    phoneId: { type: String, required: true },
-    identityId: { type: Buffer, required: true },
-    registered: { type: Boolean, required: true },
-    backupToken: { type: Buffer, required: true },
-    registration: { type: Object, required: true },
-    pairingCode: String,
-    lastPropHash: String,
-    routingInfo: Buffer,
-});
-
-// Export models
-export const MongoDataModel: Model<mongoData> = mongoose.model<mongoData>('MongoData', mongoDataSchema);
-export const AuthenticationCredsModel: Model<AuthenticationCreds> = mongoose.model<AuthenticationCreds>('AuthenticationCreds', authenticationCredsSchema);
