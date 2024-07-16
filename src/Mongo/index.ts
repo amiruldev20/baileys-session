@@ -24,10 +24,9 @@ export const useMongoAuthState = async (mongoURI: string, config: mongoConfig): 
     query: (collection: string, docId: string) => Promise<mongoData | null>;
 }> => {
     await mongoose.connect(mongoURI);
-
-    const collectionName = config.tableName || "amiruldev-auth";
-    const session = config.session || "amiruldev-waAuth";
-
+    const collectionName = config.tableName ?? "amiruldev-auth";
+    const session = config.session ?? "amiruldev-waAuth";
+    
     const query = async (collection: string, docId: string): Promise<mongoData | null> => {
         const doc = await Session.findById(`${session}-${docId}`);
         return doc ? (doc.toObject() as mongoData) : null;
