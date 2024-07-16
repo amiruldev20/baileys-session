@@ -1,4 +1,4 @@
-import { Document, Model, Schema } from 'mongoose';
+import { Document, Model, Schema, Types } from 'mongoose';
 
 type Awaitable<T> = T | Promise<T>;
 
@@ -197,8 +197,6 @@ const accountSchema = new Schema<Account>({
     accountSignature: { type: Buffer, default: null },
     deviceSignature: { type: Buffer, default: null },
 });
-
-// Add additional schemas as needed...
 
 const mongoDataSchema = new Schema<mongoData>({
     value: { type: Array, default: [] },

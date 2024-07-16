@@ -23,17 +23,14 @@ export const useMongoAuthState = async (mongoURI: string, config: mongoConfig): 
     removeCreds: () => Promise<void>;
     query: (collection: string, docId: string) => Promise<mongoData>;
 }> => {
-    await mongoose.connect(mongoURI, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    });
+    await mongoose.connect(mongoURI);
 
     const collectionName = config.tableName || "amiruldev-auth";
     const session = config.session || "amiruldev-waAuth";
 
     const query = async (collection: string, docId: string): Promise<mongoData> => {
         const doc = await Session.findById(`${session}-${docId}`);
-        return doc ? doc.toObject() as mongoData : {} as mongoData;
+        return doc ? (doc.toObject() as mongoData) : ({} as mongoData);
     };
 
     const readData = async (id: string) => {
