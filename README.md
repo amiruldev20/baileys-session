@@ -6,6 +6,17 @@
 
 ## how to use ?
 > First, you need to add the session package in package.json. You can use the github or npm version
+
+**version github**
+```json
+"session": "github.com/amiruldev20/baileys-session#mongodb"
+```
+
+**version npm*
+```json
+"session": "npm:amiruldev/mongodb-session"
+```
+
 ```json
 {
     "name": "myproject",
