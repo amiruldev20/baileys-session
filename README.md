@@ -12,7 +12,7 @@
 "session": "github.com/amiruldev20/baileys-session#mongodb"
 ```
 
-**version npm*
+**version npm**
 ```json
 "session": "npm:amiruldev/mongodb-session"
 ```
