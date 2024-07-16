@@ -29,7 +29,7 @@ const { useMongoAuthState } = require("session")
 
 // next code (support all)
 const { state, saveCreds, clear, removeCreds, query } =
-    await useMongoAuthState("urlmongo")
+    await useMongoAuthState("urlmongo", {})
 ```
 
 **Note:**
